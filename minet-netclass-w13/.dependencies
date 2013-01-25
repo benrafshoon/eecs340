@@ -241,16 +241,16 @@ sock_module.o: src/core/sock_module.cc src/libminet/Minet.h \
  src/libminet/tcp.h src/libminet/sock.h src/libminet/sockint.h \
  src/libminet/sock_mod_structs.h src/libminet/constate.h \
  src/libminet/Monitor.h
-tcp_module.o: src/core/tcp_module.cc src/libminet/tcpstate.h \
- src/libminet/Minet.h src/libminet/config.h src/libminet/buffer.h \
- src/libminet/util.h src/libminet/debug.h src/libminet/error.h \
+tcp_module.o: src/core/tcp_module.cc src/libminet/Minet.h \
+ src/libminet/config.h src/libminet/buffer.h src/libminet/util.h \
+ src/libminet/debug.h src/libminet/error.h \
  src/libminet/raw_ethernet_packet.h src/libminet/packet.h \
  src/libminet/headertrailer.h src/libminet/raw_ethernet_packet_buffer.h \
  src/libminet/ethernet.h src/libminet/arp.h src/libminet/ip.h \
- src/libminet/icmp.h src/libminet/udp.h src/libminet/tcp.h \
- src/libminet/sock.h src/libminet/sockint.h \
+ src/libminet/icmp.h src/libminet/Minet.h src/libminet/udp.h \
+ src/libminet/tcp.h src/libminet/sock.h src/libminet/sockint.h \
  src/libminet/sock_mod_structs.h src/libminet/constate.h \
- src/libminet/Monitor.h src/libminet/Minet.h
+ src/libminet/Monitor.h
 udp_module.o: src/core/udp_module.cc src/libminet/Minet.h \
  src/libminet/config.h src/libminet/buffer.h src/libminet/util.h \
  src/libminet/debug.h src/libminet/error.h \
