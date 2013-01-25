@@ -66,23 +66,23 @@ int main(int argc, char * argv[]) {
     /* set address */
     memset(&sa,0,sizeof sa);
    sa.sin_port=htons(1500);
-   struct in_addr * ip_address = site->h_addr_list[0];
-   sa.sin_addr.s_addr=htonl(*ip_address);
+   struct in_addr * ip_address = (struct in_addr *)(site->h_addr_list[0]);
+   sa.sin_addr.s_addr=htonl((uint_32)(*ip_address));
    sa.sin_family=AF_INET;
 
 
     /* connect socket */
     
-    minet_connect(sock, sa);
+    minet_connect(sock, &sa);
     
     
     /* send request */
     
     char * get = "GET /index.html HTTP/1.0\r\n";
-    write(sock, get, strlen(get));
+    write(sock, get, strlen(get)+1);
     
     char b;
-    while((&b = read(sock, b, 1)) != 0) {
+    while((b = *(char *)(read(sock, b, 1))) != 0) {
     	printf("%c", b);
     }
 
