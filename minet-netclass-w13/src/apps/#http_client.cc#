@@ -27,7 +27,7 @@ int main(int argc, char * argv[]) {
    
     struct timeval timeout;
     fd_set set;
-
+    
     /*parse args */
     if (argc != 5) {
 	fprintf(stderr, "usage: http_client k|u server port path\n");
