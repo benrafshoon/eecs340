@@ -65,7 +65,7 @@ int main(int argc, char * argv[]) {
 
     /* set address */
     memset(&sa,0,sizeof sa);
-   sa.sin_port=htons(1500);
+   sa.sin_port=htons(server_port);
    struct in_addr * ip_address = (struct in_addr *)(site->h_addr_list[0]);
    sa.sin_addr.s_addr=htonl(ip_address->s_addr);
    sa.sin_family=AF_INET;
