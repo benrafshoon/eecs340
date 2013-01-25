@@ -56,20 +56,35 @@ int main(int argc, char * argv[]) {
 
     // Do DNS lookup
     /* Hint: use gethostbyname() */
+
+    
     
     site = gethostbyname(server_name);
+    
     //http://linux.die.net/man/3/gethostbyname
 
     /* set address */
-    
-    minet_bind(sock, AF_INET);
+    memset(&sa,0,sizeof sa);
+   sa.sin_port=htons(1500);
+   struct in_addr * ip_address = site->h_addr_list[0];
+   sa.sin_addr.s_addr=htonl(*ip_address);
+   sa.sin_family=AF_INET;
+
 
     /* connect socket */
     
-    minet_connect(sock, site->name);
+    minet_connect(sock, sa);
     
     
     /* send request */
+    
+    char * get = "GET /index.html HTTP/1.0\r\n";
+    write(sock, get, strlen(get));
+    
+    char b;
+    while((&b = read(sock, b, 1)) != 0) {
+    	printf("%c", b);
+    }
 
     /* wait till socket can be read */
     /* Hint: use select(), and ignore timeout for now. */
