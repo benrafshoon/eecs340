@@ -51,39 +51,48 @@ int main(int argc, char * argv[]) {
     }
 
     /* create socket */
-    
+    printf("Creating socket\n");
     sock = minet_socket (SOCK_STREAM);
-
     // Do DNS lookup
     /* Hint: use gethostbyname() */
 
     
-    
-    site = gethostbyname(server_name);
+    printf("Getting hostname\n");
+    site = gethostbyname("google.com");
     
     //http://linux.die.net/man/3/gethostbyname
-
+    printf("Setting address\n");
     /* set address */
     memset(&sa,0,sizeof sa);
-   sa.sin_port=htons(server_port);
+   sa.sin_port=htons(80);
    struct in_addr * ip_address = (struct in_addr *)(site->h_addr_list[0]);
+   char addr[100];
+   printf("Address: %s\n", inet_ntop(AF_INET, ip_address, addr, 100));
    sa.sin_addr.s_addr=htonl(ip_address->s_addr);
    sa.sin_family=AF_INET;
 
 
     /* connect socket */
-    
+   printf("Connecting socket\n");
     minet_connect(sock, &sa);
-    
+    printf("Socket connected\n");
     
     /* send request */
-    
+    int error;
     char * get = "GET /index.html HTTP/1.0\r\n";
-    write(sock, get, strlen(get)+1);
-    
+    printf("GET: %s", get);
+
+    error = minet_write(sock, get, strlen(get)+1);
+    printf("Write code: %i\n", error);
+
     char b;
-    while(read(sock, &b, 1) != 0) {
-    	printf("%c", b);
+    while((error = minet_read(sock, &b, 1)) != 0) {
+	if(error < 0) { 
+	    minet_perror("Error reading ");
+	} else {
+
+	    printf("%c", b);
+	}
     }
 
     /* wait till socket can be read */
@@ -108,6 +117,7 @@ int main(int argc, char * argv[]) {
     } else {
 	return -1;
     }
+    minet_deinit();
 }
 
 int write_n_bytes(int fd, char * buf, int count) {
