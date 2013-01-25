@@ -52,12 +52,12 @@ int main(int argc, char * argv[]) {
 
     /* create socket */
     
-    int sock = minet_socket (SOCK_STREAM);
+    sock = minet_socket (SOCK_STREAM);
 
     // Do DNS lookup
     /* Hint: use gethostbyname() */
     
-    struct hostent *addr = gethostbyname(server_name);
+    site = gethostbyname(server_name);
     //http://linux.die.net/man/3/gethostbyname
 
     /* set address */
@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
 
     /* connect socket */
     
-    minet_connect(sock, addr->name);
+    minet_connect(sock, site->name);
     
     
     /* send request */
