@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
 
     /* create socket */
     printf("Creating socket\n");
-    if(sock = minet_socket (SOCK_STREAM) < 0) {
+    if((sock = minet_socket (SOCK_STREAM)) < 0) {
 	minet_perror("Error creating socket\n");
     }
     
@@ -85,10 +85,10 @@ int main(int argc, char * argv[]) {
     
     /* send request */
     int error;
-    char * get = "GET /index.html HTTP/1.0\r\n";
+    char * get = "GET /index.html HTTP/1.0\r\n\r\n";
     printf("GET: %s", get);
 
-    error = minet_write(sock, get, strlen(get)+1);
+    error = minet_write(sock, get, strlen(get));
     printf("Write code: %i\n", error);
 
     char b;
