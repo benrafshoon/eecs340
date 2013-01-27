@@ -59,7 +59,7 @@ int main(int argc, char * argv[]) {
 
 
     site = gethostbyname(server_name);
-     if(site == NULL) {
+    if(site == NULL) {
         fprintf(stderr, "DNS could not resolve server name\n");
         minet_deinit();
         return -1;
@@ -224,3 +224,4 @@ void printAll(int sock, FILE * printLocation) {
         }
     }
 }
+
