@@ -14,12 +14,13 @@ int readnbytes(int,char *,int);
 int main(int argc,char *argv[])
 {
   int server_port;
-  int sock,sock2;
-  struct sockaddr_in sa,sa2;
+  int listeningSocket, acceptedSocket;
+  struct sockaddr_in listiningSocketAddress,acceptedSocketAddress;
   int rc,i;
   fd_set readlist;
   fd_set connections;
   int maxfd;
+
 
   /* parse command line args */
   if (argc != 3)
@@ -34,31 +35,81 @@ int main(int argc,char *argv[])
     exit(-1);
   }
 
+  /
+  /* initialize minet */
+  if (toupper(*(argv[1])) == 'K') {
+    minet_init(MINET_KERNEL);  
+  } else if (toupper(*(argv[1])) == 'U') {
+    minet_init(MINET_USER);
+  } else {
+    fprintf(stderr, "First argument must be k or u\n");
+    exit(-1);
+  }
+
   /* initialize and make socket */
+  if ((listeningSocket = minet_socket (SOCK_STREAM)) < 0) {
+    minet_perror("Error creating socket");
+    minet_deinit();
+    return -1;
+  }
 
   /* set server address*/
-
+  memset(&listeningSocketAddress, 0, sizeof(listeningSocketAddress));
+  listeningSocketAddress.sin_port = htons(server_port);
+  listeningSocketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+  listeningSocketAddress.sin_family = AF_INET;
+ 
   /* bind listening socket */
+  if((minet_bind(listeningSocket, &listeningSocketAddress)) < 0) {
+    minet_perror("Error binding socket");
+    minet_deinit();
+    return -1;
+  }
+  //Start listening
+ 
+  if((minet_listen(listeningSocket, 1)) < 0) {
+    minet_perror("Error listening on socket");
+    minet_deinit();
+    return -1;
+  }
 
-  /* start listening */
+
+  /* initalize the list of open connections to empty */
+  FD_ZERO(&connections);
+  FD_ZERO(&readlist);
+  maxfd = 0;
 
   /* connection handling loop */
   while(1)
   {
     /* create read list */
+    
 
     /* do a select */
+    rc = minet_select(maxfd+1, &readlist, NULL, NULL, NULL);   
 
     /* process sockets that are ready */
+    for (i = 0; i < maxfd; i++) {
+      if (FD_ISSET(i,&readlist) {
 
-      /* for the accept socket, add accepted connection to connections */
-      if (i == sock)
-      {
-      }
-      else /* for a connection socket, handle the connection */
-      {
-	rc = handle_connection(i);
-      }
+	  /* for the accept socket, add accepted connection to connections */
+	  if (i == listeningSocket)
+	    {
+	      if((acceptedSocket = minet_accept(listeningSocket, &acceptedSocketAddress)) < 0) {
+		minet_perror("Error accepting socket");
+		//minet_deinit();
+		//return -1;
+	      }
+	      FD_SET(acceptedSocket,&connections);
+	      //TODO: update new state for this socket 
+	      if (acceptedSocket > maxfd) maxfd = acceptedSocket;
+	    }
+	  else /* for a connection socket, handle the connection */
+	    {
+	      rc = handle_connection(i);
+	    }
+	}      
+    }
   }
 }
 
