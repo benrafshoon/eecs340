@@ -50,6 +50,7 @@ int main(int argc,char *argv[])
         return -1;
     }
 
+
     /* set server address*/
     memset(&listeningSocketAddress, 0, sizeof(listeningSocketAddress));
     listeningSocketAddress.sin_port = htons(server_port);
@@ -57,29 +58,30 @@ int main(int argc,char *argv[])
     listeningSocketAddress.sin_family = AF_INET;
 
     /* bind listening socket */
-    if(minet_bind(listeningSocket, &listeningSocketAddress) < 0) {
+    if((minet_bind(listeningSocket, &listeningSocketAddress)) < 0) {
         minet_perror("Error binding socket");
         minet_deinit();
         return -1;
     }
     //Start listening
 
-    if(minet_listen(listeningSocket, 1) < 0) {
+    if((minet_listen(listeningSocket, 1)) < 0) {
         minet_perror("Error listening on socket");
         minet_deinit();
         return -1;
     }
 
-
     /* start listening */
-
+    printf("got here\n");
     /* connection handling loop */
     while(1) {
+      printf("enter loop\n");
         if((acceptedSocket = minet_accept(listeningSocket, &acceptedSocketAddress)) < 0) {
             minet_perror("Error accepting socket");
             minet_deinit();
             return -1;
         }
+	printf("behind if statement\n");
         /* handle connections */
         rc = handle_connection(acceptedSocket);
     }
@@ -89,7 +91,7 @@ int main(int argc,char *argv[])
 
 int handle_connection(int sock) {
 
-
+  printf("got to handle connection\n");
   char fileName[FILENAMESIZE+1];
   int fileSize;
   int rc;

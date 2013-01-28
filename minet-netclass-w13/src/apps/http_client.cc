@@ -65,7 +65,6 @@ int main(int argc, char * argv[]) {
         return -1;
     }
 
-    //http://linux.die.net/man/3/gethostbyname
     /* set address */
     memset(&socketAddress, 0, sizeof(socketAddress));
     socketAddress.sin_port=htons(server_port);
